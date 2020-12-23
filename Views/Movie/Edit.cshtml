@@ -1,0 +1,83 @@
+﻿@model MovieMvc.Models.Movies
+@{
+    ViewBag.Title = "Edit";
+}
+@section Styles
+    {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" />
+}
+<h2>Edit</h2>
+@using (Html.BeginForm("Edit", "movie", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, "ชื่อภาพยนตร์")
+        @Html.TextBoxFor(model => model.Title, new { @class = "form-control", placeholder = "กรอกชื่อภาพยนตร์" })
+        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ReleaseDate, "เข้าฉายเมื่อ")
+        <div class='input-group date' id='dtReleaseDate'>
+            @Html.TextBoxFor(model => model.ReleaseDate, new { @class = "form-control", placeholder = "กรอกเวลาเข้าฉาย" })
+            @Html.ValidationMessageFor(model => model.ReleaseDate, "", new { @class = "text-danger" })
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Genre, "หมวดหมู่")
+        @Html.DropDownListFor(m => m.Genre, new List<SelectListItem>
+        {
+             new SelectListItem { Text="Action", Value="Action" },
+        new SelectListItem { Text="Drama", Value="Drama" },
+        new SelectListItem { Text="Adventure", Value="Adventure" },
+        new SelectListItem { Text="Family", Value="Family" },
+        new SelectListItem { Text="Fantasy", Value="Fantasy" },
+        }, "กรุณาเลือก", new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Genre, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Duration, "ความยาว(นาที)")
+        @Html.TextBoxFor(model => model.Duration, new { @class = "form-control", placeholder = "กรอกความยาว(นาที)", type = "number" })
+        <lable class="text-danger">
+            @Html.ValidationMessage("errDuration")
+        </lable>
+    </div>
+    <div class="form-group">
+        @Html.Label("fileCoverImg", "รูปภาพ")
+        <input type="file" id="fileUpload" name="fileUpload" class="form-control" />
+        <lable class="text-danger">
+            @Html.ValidationMessage("errFileUpload")
+        </lable>
+    </div>
+    <div class=form-group>
+        <img src="@Url.Content(Model.CoverImg)" alt="image" class="img-responsive" />
+    </div>
+    <div class=form-group>
+        <input onclick="return validateOnSubmit()" type="submit" value="Update" class="btn btn-primary" />
+    </div>
+}
+@section Scripts
+{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+    <script type="text/javascript">
+        $(function () {
+            $('#dtReleaseDate').datetimepicker({
+                defaultDate: new Date(),
+            });
+        });
+        function validateOnSubmit() {
+            if (!$('#duration').val()) {
+                $('span[data-valmsg-for="errDuration"]').text('The duration is required.');
+            }
+        }
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"></script>
+}
