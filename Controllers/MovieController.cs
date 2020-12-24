@@ -85,14 +85,6 @@ namespace MovieMvc.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(Movies model, IFormFile fileUpload)
         {
-
-            if (model.Duration < 1)
-            {
-                ModelState.AddModelError("errDuration", "The duration field is required.");
-                return View();
-            }
-
-   
             var oldMovie = await db.Movies.FindAsync(model.Id);
             oldMovie.Duration = model.Duration;
             oldMovie.Genre = model.Genre;
