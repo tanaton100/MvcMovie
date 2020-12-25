@@ -17,7 +17,7 @@ namespace MovieMvc.Controllers
         public MovieController(AppDb db) => this.db = db;
         public async Task<IActionResult> Index()
         {
-            var movies = await db.Movies.ToListAsync();
+           // var movies = await db.Movies.ToListAsync();
             var mockdata = new List<Movies>() {
                 new Movies {Id= 1,Title="มังกรหยก",CoverImg="/images/movie/24-12-2563-มัว.jfif .jfif",ReleaseDate = DateTime.Now,Genre = "Drama",Duration=251 },
                 new Movies {Id= 2,Title="harry potter and the philosopher's stone",CoverImg="/images/movie/24-12-2563-harry.jfif .jfif",ReleaseDate = DateTime.Now,Genre = "Drama",Duration=251 }};
