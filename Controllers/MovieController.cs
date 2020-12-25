@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace MovieMvc.Controllers
 {
@@ -17,10 +18,8 @@ namespace MovieMvc.Controllers
         public MovieController(AppDb db) => this.db = db;
         public async Task<IActionResult> Index()
         {
-           // var movies = await db.Movies.ToListAsync();
-            var mockdata = new List<Movies>() {
-                new Movies {Id= 1,Title="มังกรหยก",CoverImg="/images/movie/24-12-2563-มัว.jfif .jfif",ReleaseDate = DateTime.Now,Genre = "Drama",Duration=251 },
-                new Movies {Id= 2,Title="harry potter and the philosopher's stone",CoverImg="/images/movie/24-12-2563-harry.jfif .jfif",ReleaseDate = DateTime.Now,Genre = "Drama",Duration=251 }};
+            // var movies = await db.Movies.ToListAsync();
+            var mockdata = MockData();
             return View(mockdata);
         }
 
@@ -88,13 +87,14 @@ namespace MovieMvc.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var movie = await db.Movies.FindAsync(id);
-            return View(movie);
+            //var movie = await db.Movies.FindAsync(id);
+            return View(MockData().FirstOrDefault(_ => _.Id == id));
         }
         [HttpPost]
         public async Task<IActionResult> Edit(Movies model, IFormFile fileUpload)
         {
-            var oldMovie = await db.Movies.FindAsync(model.Id);
+            // var oldMovie = await db.Movies.FindAsync(model.Id);
+            var oldMovie = MockData().FirstOrDefault(_ =>_.Id == model.Id);
             oldMovie.Duration = model.Duration;
             oldMovie.Genre = model.Genre;
             oldMovie.ReleaseDate = model.ReleaseDate;
@@ -112,8 +112,7 @@ namespace MovieMvc.Controllers
                         {
                             Directory.CreateDirectory(pathSave);
                         }
-                        string typeFile = Path.GetExtension(fileUpload.FileName);
-                        string fileName = $"{DateTime.Now:dd-MM-yyyy}-{fileUpload.FileName} {typeFile}";
+                        string fileName = $"{DateTime.Now:dd-MM-yyyy}-{fileUpload.FileName}";
                         var path = Path.Combine(Directory.GetCurrentDirectory(), pathSave, fileName);
 
                         using (var stream = new FileStream(path, FileMode.Create))
@@ -131,6 +130,15 @@ namespace MovieMvc.Controllers
                 return RedirectToAction("Index");
             }
             return View();
+        }
+
+        public List<Movies> MockData() 
+        {
+            var mockdata = new List<Movies>() {
+                new Movies {Id= 1,Title="มังกรหยก",CoverImg="/images/movie/25-12-2563-10-53-55.jfif",ReleaseDate = DateTime.Now,Genre = "Drama",Duration=251 },
+                new Movies {Id= 2,Title="harry potter and the philosopher's stone",CoverImg="/images/movie/25-12-2563-10-52-22.jfif",ReleaseDate = DateTime.Now,Genre = "Drama",Duration=251 }};
+
+            return mockdata;
         }
     }
 }
