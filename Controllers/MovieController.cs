@@ -18,9 +18,8 @@ namespace MovieMvc.Controllers
         public MovieController(AppDb db) => this.db = db;
         public async Task<IActionResult> Index()
         {
-            // var movies = await db.Movies.ToListAsync();
-            var mockdata = MockData();
-            return View(mockdata);
+             var movies = await db.Movies.ToListAsync();
+            return View(movies);
         }
 
         public IActionResult Create()
@@ -87,14 +86,13 @@ namespace MovieMvc.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            //var movie = await db.Movies.FindAsync(id);
-            return View(MockData().FirstOrDefault(_ => _.Id == id));
+            var movie = await db.Movies.FindAsync(id);
+            return View(movie);
         }
         [HttpPost]
         public async Task<IActionResult> Edit(Movies model, IFormFile fileUpload)
         {
-            // var oldMovie = await db.Movies.FindAsync(model.Id);
-            var oldMovie = MockData().FirstOrDefault(_ =>_.Id == model.Id);
+             var oldMovie = await db.Movies.FindAsync(model.Id);
             oldMovie.Duration = model.Duration;
             oldMovie.Genre = model.Genre;
             oldMovie.ReleaseDate = model.ReleaseDate;
