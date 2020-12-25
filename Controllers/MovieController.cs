@@ -98,7 +98,6 @@ namespace MovieMvc.Controllers
 
             if (ModelState.IsValid)
             {
-
                 if (fileUpload != null)
                 {
                     if (!oldMovie.CoverImg.Contains(fileUpload.FileName))
