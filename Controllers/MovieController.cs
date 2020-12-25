@@ -49,8 +49,7 @@ namespace MovieMvc.Controllers
                 {
                     Directory.CreateDirectory(pathSave);
                 }
-                string extFile = Path.GetExtension(fileUpload.FileName);
-                string fileName = DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss") + extFile;
+                string fileName = $"{DateTime.Now:dd-MM-yyyy}-{fileUpload.FileName}";
                 var path = Path.Combine(Directory.GetCurrentDirectory(), pathSave, fileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
