@@ -87,7 +87,6 @@ namespace MovieMvc.Controllers
             var movie = await db.Movies.FindAsync(id);
             return View(movie);
         }
-        //Todo check Duplicate image
         [HttpPost]
         public async Task<IActionResult> Edit(Movies model, IFormFile fileUpload)
         {
