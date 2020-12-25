@@ -71,6 +71,12 @@ namespace MovieMvc.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var movie = await db.Movies.FindAsync(id);
+            var pathPic = $"wwwroot{movie.CoverImg}";
+            FileInfo file = new FileInfo(pathPic);
+            if (file.Exists)
+            {
+                file.Delete();
+            }
             db.Movies.Remove(movie);
            await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -81,7 +87,7 @@ namespace MovieMvc.Controllers
             var movie = await db.Movies.FindAsync(id);
             return View(movie);
         }
-
+        //Todo check Duplicate image
         [HttpPost]
         public async Task<IActionResult> Edit(Movies model, IFormFile fileUpload)
         {
@@ -89,25 +95,31 @@ namespace MovieMvc.Controllers
             oldMovie.Duration = model.Duration;
             oldMovie.Genre = model.Genre;
             oldMovie.ReleaseDate = model.ReleaseDate;
+            
             if (ModelState.IsValid)
             {
+              
                 if (fileUpload != null)
                 {
-                    string pathImgMovie = "/images/movie/";
-                    string pathSave = $"wwwroot{pathImgMovie}";
-                    if (!Directory.Exists(pathSave))
+                    if (!oldMovie.CoverImg.Contains(fileUpload.FileName))
                     {
-                        Directory.CreateDirectory(pathSave);
-                    }
-                    string extFile = Path.GetExtension(fileUpload.FileName);
-                    string fileName = DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss") + extFile;
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), pathSave, fileName);
+                        string pathImgMovie = "/images/movie/";
+                        string pathSave = $"wwwroot{pathImgMovie}";
+                        if (!Directory.Exists(pathSave))
+                        {
+                            Directory.CreateDirectory(pathSave);
+                        }
+                        string typeFile = Path.GetExtension(fileUpload.FileName);
+                        string fileName = $"{DateTime.Now:dd-MM-yyyy}-{fileUpload.FileName} {typeFile}";
+                        var path = Path.Combine(Directory.GetCurrentDirectory(), pathSave, fileName);
 
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await fileUpload.CopyToAsync(stream);
+                        using (var stream = new FileStream(path, FileMode.Create))
+                        {
+                            await fileUpload.CopyToAsync(stream);
+                        }
+                        oldMovie.CoverImg = pathImgMovie + fileName;
                     }
-                    oldMovie.CoverImg = pathImgMovie + fileName;
+
                 }
 
                 oldMovie.ModifyDate = DateTime.Now;
