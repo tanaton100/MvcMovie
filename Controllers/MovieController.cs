@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieMvc.Data;
 using MovieMvc.Models;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -17,7 +18,10 @@ namespace MovieMvc.Controllers
         public async Task<IActionResult> Index()
         {
             var movies = await db.Movies.ToListAsync();
-            return View(movies);
+            var mockdata = new List<Movies>() {
+                new Movies {Id= 1,Title="มังกรหยก",CoverImg="/images/movie/24-12-2563-มัว.jfif .jfif",ReleaseDate = DateTime.Now,Genre = "Drama",Duration=251 },
+                new Movies {Id= 2,Title="harry potter and the philosopher's stone",CoverImg="/images/movie/24-12-2563-harry.jfif .jfif",ReleaseDate = DateTime.Now,Genre = "Drama",Duration=251 }};
+            return View(mockdata);
         }
 
         public IActionResult Create()
@@ -78,7 +82,7 @@ namespace MovieMvc.Controllers
                 file.Delete();
             }
             db.Movies.Remove(movie);
-           await db.SaveChangesAsync();
+            await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -94,10 +98,10 @@ namespace MovieMvc.Controllers
             oldMovie.Duration = model.Duration;
             oldMovie.Genre = model.Genre;
             oldMovie.ReleaseDate = model.ReleaseDate;
-            
+
             if (ModelState.IsValid)
             {
-              
+
                 if (fileUpload != null)
                 {
                     if (!oldMovie.CoverImg.Contains(fileUpload.FileName))
