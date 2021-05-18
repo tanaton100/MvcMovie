@@ -1,3 +1,4 @@
+using Autofac;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using MovieMvc.Data;
+using MovieMvc.Service;
 using System.IO;
 
 namespace MovieMvc
@@ -30,6 +32,16 @@ namespace MovieMvc
                 options
                   .UseSqlServer(Configuration.GetConnectionString(nameof(AppDb)));
             });
+        }
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+
+            var serviceAssembly = typeof(MovieService).Assembly;
+
+            builder.RegisterAssemblyTypes(serviceAssembly)
+                .Where(t => t.Name.EndsWith("Service")).AsImplementedInterfaces().SingleInstance();
+
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

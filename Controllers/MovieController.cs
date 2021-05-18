@@ -8,12 +8,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
+using MovieMvc.Service;
 
 namespace MovieMvc.Controllers
 {
     public class MovieController : Controller
     {
         private readonly AppDb db;
+        private IMovieService _movieService;
+
+      
 
         public MovieController(AppDb db) => this.db = db;
         public async Task<IActionResult> Index()
@@ -26,6 +30,8 @@ namespace MovieMvc.Controllers
         {
             return View();
         }
+
+     
         [HttpPost]
         public async Task<IActionResult> Create(Movies model, IFormFile fileUpload)
         {
